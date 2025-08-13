@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import { fonts } from "../../constants/fonts";
 
 // Dummy data
 const stories = Array.from({ length: 6 }).map((_, i) => ({
@@ -181,7 +182,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-  sectionTitle: { fontSize: 18, fontWeight: "bold" },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    fontFamily: fonts.styleScriptRegular,
+  },
   seeAll: { color: "#007AFF", fontSize: 14 },
   storyCard: {
     width: 100,
