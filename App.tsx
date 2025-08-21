@@ -1,6 +1,12 @@
 import * as Font from "expo-font";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+} from "react-native";
 import { Provider } from "react-redux";
 import { Navigation } from "./src/navigation";
 import { store } from "./src/store";
@@ -45,6 +51,11 @@ export default function App() {
 
   return (
     <Provider store={store}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
       <Navigation />
     </Provider>
   );
