@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fonts } from "../../constants/fonts";
+import Header from "../../components/common/Header";
 
 // Mock data for reading history
 const mockReadingHistory = [
@@ -35,24 +36,11 @@ const PersonalScreen = () => {
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.menuButton}>
-          <View style={styles.hamburgerIcon}>
-            <View style={styles.hamburgerLine} />
-            <View style={styles.hamburgerLine} />
-            <View style={styles.hamburgerLine} />
-          </View>
-        </TouchableOpacity>
-
-        <Text style={styles.headerTitle}>Vũ trụ truyện</Text>
-
-        <TouchableOpacity style={styles.searchButton}>
-          <View style={styles.searchIcon}>
-            <View style={styles.searchCircle} />
-            <View style={styles.searchHandle} />
-          </View>
-        </TouchableOpacity>
-      </View>
+      <Header
+        title="Cá nhân"
+        onMenuPress={() => console.log("Menu pressed")}
+        onSearchPress={() => console.log("Search pressed")}
+      />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* User Profile Section */}

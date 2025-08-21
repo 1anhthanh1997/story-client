@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fonts } from "../../constants/fonts";
+import Header from "components/common/Header";
 
 // Mock data for library stories with reading progress
 const mockLibraryStories = [
@@ -194,15 +195,11 @@ const LibraryScreen = () => {
       />
 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
-          <Text style={styles.backButtonText}>←</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Thư viện</Text>
-        <TouchableOpacity style={styles.searchButton}>
-          <Text style={styles.searchButtonText}>🔍</Text>
-        </TouchableOpacity>
-      </View>
+      <Header
+        title="Thư viện"
+        onMenuPress={() => console.log("Menu pressed")}
+        onSearchPress={() => console.log("Search pressed")}
+      />
 
       {/* Search Bar */}
       <View style={styles.searchSection}>
