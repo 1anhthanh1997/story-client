@@ -19,7 +19,12 @@ const StoryCard: React.FC<StoryCardProps> = ({ item }) => {
   return (
     <View style={styles.storyCard}>
       <View style={styles.imageContainer}>
-        <Image source={item.image} style={styles.storyImage} />
+        <Image
+          source={{
+            uri: "https://drive.google.com/uc?export=view&id=1tztWuVZi8DSeBDj-yIBqEf6u9JUlSt95",
+          }}
+          style={styles.storyImage}
+        />
         {item.badge > 0 && (
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{item.badge}</Text>
@@ -70,4 +75,3 @@ const styles = StyleSheet.create({
 });
 
 export default StoryCard;
-

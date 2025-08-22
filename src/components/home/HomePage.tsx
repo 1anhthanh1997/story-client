@@ -4,6 +4,8 @@ import {
   StatusBar,
   StyleSheet,
   SafeAreaView,
+  Text,
+  TouchableOpacity,
 } from "react-native";
 import {
   stories,
@@ -19,14 +21,25 @@ import CompletedStoriesSection from "./section/CompletedStoriesSection";
 import RecentReadsSection from "./section/RecentReadsSection";
 import RankingsSection from "./section/RankingsSection";
 import CategoriesSection from "./section/CategoriesSection";
+import { getAllStories } from "api/story";
+import { useEffect, useState } from "react";
+import { Story } from "../../types/story";
 
 const HomePage = () => {
+  const [storiesData, setStoriesData] = useState<Story[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   // Define sections data to avoid repetition
   const sections = [
     {
       id: "new",
       title: "Mới đăng",
-      content: <NewStoriesSection stories={stories} />,
+      content: (
+        <NewStoriesSection
+          stories={storiesData.length > 0 ? storiesData : stories}
+        />
+      ),
     },
     {
       id: "completed",
@@ -50,6 +63,29 @@ const HomePage = () => {
     },
   ];
 
+  const fetchStories = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response: any = await getAllStories({
+        page: 1,
+        limit: 20,
+        sortBy: "createdAt",
+        sortOrder: "desc",
+      });
+      setStoriesData(response.data?.stories);
+    } catch (error) {
+      console.error("Error fetching stories:", error);
+      setError("Failed to fetch stories");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStories();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
@@ -62,6 +98,21 @@ const HomePage = () => {
         onMenuPress={() => console.log("Menu pressed")}
         onSearchPress={() => console.log("Search pressed")}
       />
+
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Loading stories...</Text>
+        </View>
+      )}
+
+      {error && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={fetchStories}>
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <ScrollView
         style={styles.scroll}
@@ -97,6 +148,37 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 16,
+  },
+  loadingContainer: {
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    fontSize: 16,
+    color: "#666",
+  },
+  errorContainer: {
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  errorText: {
+    fontSize: 16,
+    color: "#ff0000",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  retryButton: {
+    backgroundColor: "#007AFF",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
 

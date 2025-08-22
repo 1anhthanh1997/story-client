@@ -6,7 +6,6 @@ import type { RootStackParamList, MainTabParamList } from "../types/navigation";
 
 // Import screens
 import HomeScreen from "../screens/Home/HomeScreen";
-import ProfileScreen from "../screens/Profile/ProfileScreen";
 import SplashScreen from "../screens/Splash/SplashScreen";
 import LibraryScreen from "../screens/Library/LibraryScreen";
 import AllStoryScreen from "../screens/AllStory/AllStoryScreen";
