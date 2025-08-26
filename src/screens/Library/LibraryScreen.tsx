@@ -11,19 +11,24 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fonts } from "../../constants/fonts";
 import Header from "components/common/Header";
+import { SearchBar } from "components/library/SearchBar";
+import { ExpandIcon, FilterIcon, GridIcon, ListIcon } from "components/icons";
+import StoryGridView from "components/library/StoryGridView";
+import StoryListView from "components/library/StoryListView";
 
 // Mock data for library stories with reading progress
 const mockLibraryStories = [
   {
     id: 1,
-    title: "Võ Luyện Đỉnh Phon",
+    title: "Võ Luyện Đỉnh Phong",
     author: "Thiên Tâm Thổ Đậu",
     currentChapter: 156,
     totalChapters: 2543,
     progress: 6,
-    status: "reading",
+    status: "reading" as const,
     lastRead: "Hôm qua",
     coverColor: "#FF6B6B",
+    coverImage: "https://via.placeholder.com/80x120/FF6B6B/FFFFFF?text=⚔️",
   },
   {
     id: 2,
@@ -32,9 +37,10 @@ const mockLibraryStories = [
     currentChapter: 245,
     totalChapters: 1200,
     progress: 20,
-    status: "reading",
+    status: "reading" as const,
     lastRead: "23/4/2025",
     coverColor: "#4ECDC4",
+    coverImage: "https://via.placeholder.com/80x120/4ECDC4/FFFFFF?text=🌊",
   },
   {
     id: 3,
@@ -43,20 +49,22 @@ const mockLibraryStories = [
     currentChapter: 543,
     totalChapters: 1123,
     progress: 48,
-    status: "reading",
+    status: "reading" as const,
     lastRead: "21/4/2025",
     coverColor: "#45B7D1",
+    coverImage: "https://via.placeholder.com/80x120/45B7D1/FFFFFF?text=🧘",
   },
   {
     id: 4,
-    title: "Đấu Phá Thương Kh",
+    title: "Đấu Phá Thương Khung",
     author: "Vong Ngữ",
     currentChapter: 1648,
     totalChapters: 1648,
     progress: 100,
-    status: "completed",
+    status: "completed" as const,
     lastRead: "20/4/2025",
     coverColor: "#96CEB4",
+    coverImage: "https://via.placeholder.com/80x120/96CEB4/FFFFFF?text=🔥",
   },
   {
     id: 5,
@@ -65,9 +73,10 @@ const mockLibraryStories = [
     currentChapter: 876,
     totalChapters: 1352,
     progress: 65,
-    status: "reading",
+    status: "reading" as const,
     lastRead: "18/4/2025",
     coverColor: "#FFEAA7",
+    coverImage: "https://via.placeholder.com/80x120/FFEAA7/000000?text=⚡",
   },
   {
     id: 6,
@@ -76,9 +85,10 @@ const mockLibraryStories = [
     currentChapter: 0,
     totalChapters: 1800,
     progress: 0,
-    status: "unread",
+    status: "unread" as const,
     lastRead: "",
     coverColor: "#DDA0DD",
+    coverImage: "https://via.placeholder.com/80x120/DDA0DD/FFFFFF?text=🌸",
   },
   {
     id: 7,
@@ -87,9 +97,10 @@ const mockLibraryStories = [
     currentChapter: 0,
     totalChapters: 2100,
     progress: 0,
-    status: "unread",
+    status: "unread" as const,
     lastRead: "",
     coverColor: "#98FB98",
+    coverImage: "https://via.placeholder.com/80x120/98FB98/000000?text=🌿",
   },
   {
     id: 8,
@@ -98,93 +109,16 @@ const mockLibraryStories = [
     currentChapter: 0,
     totalChapters: 1500,
     progress: 0,
-    status: "unread",
+    status: "unread" as const,
     lastRead: "",
     coverColor: "#F0E68C",
+    coverImage: "https://via.placeholder.com/80x120/F0E68C/000000?text=👑",
   },
 ];
 
 const LibraryScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [isGridLayout, setIsGridLayout] = useState(true);
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "reading":
-        return "#007AFF";
-      case "completed":
-        return "#10B981";
-      case "unread":
-        return "#6B7280";
-      default:
-        return "#6B7280";
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "reading":
-        return "Đang đọc";
-      case "completed":
-        return "Đã đọc";
-      case "unread":
-        return "Chưa đọc";
-      default:
-        return "Chưa đọc";
-    }
-  };
-
-  const renderStoryItem = (story: any) => (
-    <View key={story.id} style={styles.storyItem}>
-      {/* Cover Image */}
-      <View style={[styles.coverImage, { backgroundColor: story.coverColor }]}>
-        <Text style={styles.coverPlaceholder}>📚</Text>
-      </View>
-
-      {/* Progress Bar */}
-      <View style={styles.progressContainer}>
-        <View style={styles.progressBar}>
-          <View
-            style={[
-              styles.progressFill,
-              {
-                width: `${story.progress}%`,
-                backgroundColor:
-                  story.status === "completed" ? "#10B981" : "#007AFF",
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.progressText}>
-          <Text style={styles.progressNumbers}>
-            {story.currentChapter}/{story.totalChapters}
-          </Text>
-          <Text style={styles.progressPercent}>{story.progress}%</Text>
-        </View>
-      </View>
-
-      {/* Story Info */}
-      <Text style={styles.storyTitle} numberOfLines={2}>
-        {story.title}
-      </Text>
-      <Text style={styles.storyAuthor} numberOfLines={1}>
-        {story.author}
-      </Text>
-
-      {/* Status Button */}
-      <TouchableOpacity
-        style={[
-          styles.statusButton,
-          { backgroundColor: getStatusColor(story.status) },
-        ]}
-      >
-        <Text style={styles.statusText}>{getStatusText(story.status)}</Text>
-        {story.lastRead && (
-          <Text style={styles.lastReadText}>{story.lastRead}</Text>
-        )}
-      </TouchableOpacity>
-    </View>
-  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -203,22 +137,19 @@ const LibraryScreen = () => {
 
       {/* Search Bar */}
       <View style={styles.searchSection}>
-        <View style={styles.searchContainer}>
-          <Text style={styles.searchIcon}>🔍</Text>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Tìm kiếm trong thư viện"
-            placeholderTextColor="#999"
-            value={searchText}
-            onChangeText={setSearchText}
-          />
-        </View>
+        <SearchBar
+          value={searchText}
+          onChangeText={setSearchText}
+          placeholder="Tìm kiếm trong thư viện"
+        />
       </View>
 
       {/* Filter and View Options */}
       <View style={styles.filterSection}>
         <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterButtonText}>🔽 Lọc</Text>
+          <FilterIcon />
+          <Text style={styles.filterButtonText}>Lọc</Text>
+          <ExpandIcon />
         </TouchableOpacity>
 
         <View style={styles.layoutToggle}>
@@ -229,14 +160,7 @@ const LibraryScreen = () => {
             ]}
             onPress={() => setIsGridLayout(true)}
           >
-            <Text
-              style={[
-                styles.layoutButtonText,
-                isGridLayout && styles.layoutButtonTextActive,
-              ]}
-            >
-              ⬜
-            </Text>
+            <GridIcon color={isGridLayout ? "#fff" : "#000"} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -246,28 +170,30 @@ const LibraryScreen = () => {
             ]}
             onPress={() => setIsGridLayout(false)}
           >
-            <Text
-              style={[
-                styles.layoutButtonText,
-                !isGridLayout && styles.layoutButtonTextActive,
-              ]}
-            >
-              ☰
-            </Text>
+            <ListIcon color={!isGridLayout ? "#fff" : "#000"} />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Stories Grid */}
-      <ScrollView
-        style={styles.content}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainer}
-      >
-        <View style={styles.storiesGrid}>
-          {mockLibraryStories.map(renderStoryItem)}
+      {/* Stories Content */}
+      {isGridLayout ? (
+        <ScrollView
+          style={styles.content}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.contentContainer}
+        >
+          <View style={styles.storiesGrid}>
+            <StoryGridView stories={mockLibraryStories} />
+          </View>
+        </ScrollView>
+      ) : (
+        <View style={styles.listContainer}>
+          <StoryListView
+            stories={mockLibraryStories}
+            onStoryPress={(story) => console.log("Story pressed:", story.title)}
+          />
         </View>
-      </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -277,60 +203,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-  },
-  backButton: {
-    padding: 8,
-  },
-  backButtonText: {
-    fontSize: 24,
-    color: "#333",
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    fontFamily: fonts.styleScriptRegular,
-    textAlign: "center",
-    flex: 1,
-  },
-  searchButton: {
-    padding: 8,
-  },
-  searchButtonText: {
-    fontSize: 20,
-    color: "#333",
-  },
   searchSection: {
-    padding: 16,
+    padding: 8,
     backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#f5f5f5",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  searchIcon: {
-    fontSize: 18,
-    marginRight: 12,
-    color: "#666",
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
   },
   filterSection: {
     padding: 16,
@@ -346,8 +221,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: "#f5f5f5",
+    borderWidth: 1,
+    borderColor: "#D9D9D9",
     borderRadius: 8,
+    gap: 8,
   },
   filterButtonText: {
     fontSize: 16,
@@ -355,29 +232,25 @@ const styles = StyleSheet.create({
   },
   layoutToggle: {
     flexDirection: "row",
-    backgroundColor: "#f5f5f5",
     borderRadius: 8,
     padding: 4,
+    gap: 8,
   },
   layoutButton: {
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 6,
     backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#D9D9D9",
   },
   layoutButtonActive: {
     backgroundColor: "#3B82F6",
-  },
-  layoutButtonText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  layoutButtonTextActive: {
-    color: "#fff",
+    borderColor: "transparent",
   },
   content: {
     flex: 1,
-    padding: 16,
+    padding: 8,
   },
   contentContainer: {
     paddingBottom: 80, // Add padding to prevent content from being hidden behind bottom tab bar
@@ -387,82 +260,9 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
   },
-  storyItem: {
-    width: "48%",
-    marginBottom: 20,
-  },
-  coverImage: {
-    width: "100%",
-    height: 120,
-    borderRadius: 8,
-    marginBottom: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  coverPlaceholder: {
-    fontSize: 24,
-  },
-  progressContainer: {
-    marginBottom: 8,
-  },
-  progressBar: {
-    height: 4,
-    backgroundColor: "#e5e7eb",
-    borderRadius: 2,
-    marginBottom: 4,
-  },
-  progressFill: {
-    height: "100%",
-    borderRadius: 2,
-  },
-  progressText: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  progressNumbers: {
-    fontSize: 12,
-    color: "#666",
-    fontWeight: "500",
-  },
-  progressPercent: {
-    fontSize: 12,
-    color: "#666",
-    fontWeight: "500",
-  },
-  storyTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 4,
-    lineHeight: 18,
-  },
-  storyAuthor: {
-    fontSize: 12,
-    color: "#666",
-    marginBottom: 8,
-  },
-  statusButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    alignItems: "center",
-  },
-  statusText: {
-    fontSize: 12,
-    color: "#fff",
-    fontWeight: "600",
-  },
-  lastReadText: {
-    fontSize: 10,
-    color: "#fff",
-    marginTop: 2,
-    opacity: 0.9,
+  listContainer: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
   },
 });
 

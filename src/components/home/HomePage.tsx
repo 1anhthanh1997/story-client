@@ -23,10 +23,9 @@ import RankingsSection from "./section/RankingsSection";
 import CategoriesSection from "./section/CategoriesSection";
 import { getAllStories } from "api/story";
 import { useEffect, useState } from "react";
-import { Story } from "../../types/story";
 
 const HomePage = () => {
-  const [storiesData, setStoriesData] = useState<Story[]>([]);
+  const [storiesData, setStoriesData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
