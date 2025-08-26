@@ -1,3 +1,4 @@
+import { STORY_LAYOUT_TYPE } from "constants/layout";
 import React from "react";
 import {
   View,
@@ -18,15 +19,18 @@ interface Story {
   progress: number;
   currentChapter: number;
   totalChapters: number;
+  rating?: number;
 }
 
 interface StoryListViewProps {
   stories: Story[];
   onStoryPress?: (story: Story) => void;
+  type: string;
 }
 
 const StoryListView: React.FC<StoryListViewProps> = ({
   stories,
+  type,
   onStoryPress,
 }) => {
   return (
@@ -56,29 +60,37 @@ const StoryListView: React.FC<StoryListViewProps> = ({
               {story.author}
             </Text>
             {/* Progress indicator for reading status */}
-            <View style={styles.progressContainer}>
-              <View style={styles.progressBar}>
-                <View
-                  style={[
-                    styles.progressFill,
-                    {
-                      width: `${story.progress}%`,
-                      backgroundColor:
-                        story.status === "completed" ? "#10B981" : "#007AFF",
-                    },
-                  ]}
-                />
+            {type === STORY_LAYOUT_TYPE.LIBRARY && (
+              <View style={styles.progressContainer}>
+                <View style={styles.progressBar}>
+                  <View
+                    style={[
+                      styles.progressFill,
+                      {
+                        width: `${story.progress}%`,
+                        backgroundColor:
+                          story.status === "completed" ? "#10B981" : "#007AFF",
+                      },
+                    ]}
+                  />
+                </View>
+                <View style={styles.progressText}>
+                  <Text style={styles.progressNumbers}>
+                    {`${story.currentChapter}/${story.totalChapters}`}
+                  </Text>
+                  <Text style={styles.progressPercent}>{story.progress}%</Text>
+                </View>
               </View>
-              <View style={styles.progressText}>
-                <Text style={styles.progressNumbers}>
-                  {`${story.currentChapter}/${story.totalChapters}`}
-                </Text>
-                <Text style={styles.progressPercent}>{story.progress}%</Text>
-              </View>
-            </View>
+            )}
             <Text style={styles.lastReadText}>
               Đọc lần cuối: {story.lastRead || "Chưa đọc"}
             </Text>
+            {type === STORY_LAYOUT_TYPE.FAVORITES && (
+              <View style={styles.ratingContainer}>
+                <Text style={styles.starIcon}>★</Text>
+                <Text style={styles.ratingText}>{story.rating || 0}</Text>
+              </View>
+            )}
           </View>
         </TouchableOpacity>
       ))}
@@ -169,6 +181,21 @@ const styles = StyleSheet.create({
   },
   progressPercent: {
     fontSize: 12,
+    color: "#666",
+    fontWeight: "500",
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  starIcon: {
+    fontSize: 16,
+    color: "#FFD700",
+    marginRight: 4,
+  },
+  ratingText: {
+    fontSize: 14,
     color: "#666",
     fontWeight: "500",
   },

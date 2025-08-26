@@ -1,6 +1,8 @@
+import { DeleteIcon } from "components/icons";
+import { STORY_LAYOUT_TYPE } from "constants/layout";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const StoryGridView = ({ stories }: { stories: any }) => {
+const StoryGridView = ({ stories, type }: { stories: any; type: string }) => {
   return (
     <View style={styles.storiesGrid}>
       {stories.map((story: any) => (
@@ -11,27 +13,35 @@ const StoryGridView = ({ stories }: { stories: any }) => {
           >
             <Text style={styles.coverPlaceholder}>📚</Text>
 
+            {type === STORY_LAYOUT_TYPE.FAVORITES && (
+              <TouchableOpacity style={styles.iconContainer}>
+                <DeleteIcon />
+              </TouchableOpacity>
+            )}
+
             {/* Progress Bar */}
-            <View style={styles.progressContainer}>
-              <View style={styles.progressBar}>
-                <View
-                  style={[
-                    styles.progressFill,
-                    {
-                      width: `${story.progress}%`,
-                      backgroundColor:
-                        story.status === "completed" ? "#10B981" : "#007AFF",
-                    },
-                  ]}
-                />
+            {type === STORY_LAYOUT_TYPE.LIBRARY && (
+              <View style={styles.progressContainer}>
+                <View style={styles.progressBar}>
+                  <View
+                    style={[
+                      styles.progressFill,
+                      {
+                        width: `${story.progress}%`,
+                        backgroundColor:
+                          story.status === "completed" ? "#10B981" : "#007AFF",
+                      },
+                    ]}
+                  />
+                </View>
+                <View style={styles.progressText}>
+                  <Text style={styles.progressNumbers}>
+                    {`${story.currentChapter}/${story.totalChapters}`}
+                  </Text>
+                  <Text style={styles.progressPercent}>{story.progress}%</Text>
+                </View>
               </View>
-              <View style={styles.progressText}>
-                <Text style={styles.progressNumbers}>
-                  {`${story.currentChapter}/${story.totalChapters}`}
-                </Text>
-                <Text style={styles.progressPercent}>{story.progress}%</Text>
-              </View>
-            </View>
+            )}
           </View>
 
           {/* Story Info */}
@@ -42,6 +52,12 @@ const StoryGridView = ({ stories }: { stories: any }) => {
             <Text style={styles.storyAuthor} numberOfLines={1}>
               {story.author}
             </Text>
+            {type === STORY_LAYOUT_TYPE.FAVORITES && (
+              <View style={styles.ratingContainer}>
+                <Text style={styles.starIcon}>★</Text>
+                <Text style={styles.ratingText}>{story.rating || 0}</Text>
+              </View>
+            )}
           </View>
 
           {/* Status Button */}
@@ -150,13 +166,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     lineHeight: 18,
     height: 36,
-    textAlign: "center",
   },
   storyAuthor: {
     fontSize: 12,
     color: "#666",
-    marginBottom: 8,
-    textAlign: "center",
   },
   statusButton: {
     paddingVertical: 4,
@@ -181,7 +194,36 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   storyInfoContainer: {
-    paddingHorizontal: 4,
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+  },
+  iconContainer: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "#FF4D4F",
+    borderRadius: 4,
+    padding: 4,
+    zIndex: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  starIcon: {
+    fontSize: 16,
+    color: "#FFD700",
+    marginRight: 4,
+  },
+  ratingText: {
+    fontSize: 14,
+    color: "#666",
+    fontWeight: "500",
   },
 });
 

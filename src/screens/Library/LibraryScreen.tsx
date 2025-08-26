@@ -1,20 +1,12 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  StatusBar,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { fonts } from "../../constants/fonts";
 import Header from "components/common/Header";
+import FilterAndLayoutToggle from "components/library/FilterAndLayoutToggle";
 import { SearchBar } from "components/library/SearchBar";
-import { ExpandIcon, FilterIcon, GridIcon, ListIcon } from "components/icons";
 import StoryGridView from "components/library/StoryGridView";
 import StoryListView from "components/library/StoryListView";
+import { STORY_LAYOUT_TYPE } from "constants/layout";
+import React, { useState } from "react";
+import { ScrollView, StatusBar, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Mock data for library stories with reading progress
 const mockLibraryStories = [
@@ -145,35 +137,11 @@ const LibraryScreen = () => {
       </View>
 
       {/* Filter and View Options */}
-      <View style={styles.filterSection}>
-        <TouchableOpacity style={styles.filterButton}>
-          <FilterIcon />
-          <Text style={styles.filterButtonText}>Lọc</Text>
-          <ExpandIcon />
-        </TouchableOpacity>
-
-        <View style={styles.layoutToggle}>
-          <TouchableOpacity
-            style={[
-              styles.layoutButton,
-              isGridLayout && styles.layoutButtonActive,
-            ]}
-            onPress={() => setIsGridLayout(true)}
-          >
-            <GridIcon color={isGridLayout ? "#fff" : "#000"} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.layoutButton,
-              !isGridLayout && styles.layoutButtonActive,
-            ]}
-            onPress={() => setIsGridLayout(false)}
-          >
-            <ListIcon color={!isGridLayout ? "#fff" : "#000"} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <FilterAndLayoutToggle
+        isGridLayout={isGridLayout}
+        onLayoutChange={setIsGridLayout}
+        onFilterPress={() => console.log("Filter pressed")}
+      />
 
       {/* Stories Content */}
       {isGridLayout ? (
@@ -183,16 +151,28 @@ const LibraryScreen = () => {
           contentContainerStyle={styles.contentContainer}
         >
           <View style={styles.storiesGrid}>
-            <StoryGridView stories={mockLibraryStories} />
+            <StoryGridView
+              stories={mockLibraryStories}
+              type={STORY_LAYOUT_TYPE.LIBRARY}
+            />
           </View>
         </ScrollView>
       ) : (
-        <View style={styles.listContainer}>
-          <StoryListView
-            stories={mockLibraryStories}
-            onStoryPress={(story) => console.log("Story pressed:", story.title)}
-          />
-        </View>
+        <ScrollView
+          style={styles.content}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.contentContainer}
+        >
+          <View style={styles.listContainer}>
+            <StoryListView
+              stories={mockLibraryStories}
+              type={STORY_LAYOUT_TYPE.LIBRARY}
+              onStoryPress={(story) =>
+                console.log("Story pressed:", story.title)
+              }
+            />
+          </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );
@@ -206,47 +186,6 @@ const styles = StyleSheet.create({
   searchSection: {
     padding: 8,
     backgroundColor: "#fff",
-  },
-  filterSection: {
-    padding: 16,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  filterButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: "#D9D9D9",
-    borderRadius: 8,
-    gap: 8,
-  },
-  filterButtonText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  layoutToggle: {
-    flexDirection: "row",
-    borderRadius: 8,
-    padding: 4,
-    gap: 8,
-  },
-  layoutButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#D9D9D9",
-  },
-  layoutButtonActive: {
-    backgroundColor: "#3B82F6",
-    borderColor: "transparent",
   },
   content: {
     flex: 1,

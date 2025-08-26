@@ -1,0 +1,4 @@
+export const STORY_LAYOUT_TYPE = {
+  LIBRARY: "LIBRARY",
+  FAVORITES: "FAVORITES",
+};

@@ -1,16 +1,13 @@
+import Header from "components/common/Header";
+import FilterAndLayoutToggle from "components/library/FilterAndLayoutToggle";
+import { SearchBar } from "components/library/SearchBar";
+import StoryGridView from "components/library/StoryGridView";
+import StoryListView from "components/library/StoryListView";
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  Image,
-} from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fonts } from "../../constants/fonts";
-import Header from "components/common/Header";
+import { STORY_LAYOUT_TYPE } from "../../constants/layout";
 
 // Mock data for favorites
 const mockFavorites = [
@@ -20,6 +17,12 @@ const mockFavorites = [
     author: "Thiên Tàm Thổ Đậu",
     rating: 4.8,
     coverColor: "#FF6B6B",
+    coverImage: "https://via.placeholder.com/80x120/FF6B6B/FFFFFF?text=⚔️",
+    lastRead: "Hôm qua",
+    status: "reading" as const,
+    progress: 45,
+    currentChapter: 156,
+    totalChapters: 2543,
   },
   {
     id: 2,
@@ -27,6 +30,12 @@ const mockFavorites = [
     author: "Vong Ngữ",
     rating: 4.7,
     coverColor: "#4ECDC4",
+    coverImage: "https://via.placeholder.com/80x120/4ECDC4/FFFFFF?text=🔥",
+    lastRead: "23/4/2025",
+    status: "reading" as const,
+    progress: 78,
+    currentChapter: 245,
+    totalChapters: 1200,
   },
   {
     id: 3,
@@ -34,6 +43,12 @@ const mockFavorites = [
     author: "Vũ Phong",
     rating: 4.6,
     coverColor: "#45B7D1",
+    coverImage: "https://via.placeholder.com/80x120/45B7D1/FFFFFF?text=⚡",
+    lastRead: "21/4/2025",
+    status: "reading" as const,
+    progress: 65,
+    currentChapter: 876,
+    totalChapters: 1352,
   },
   {
     id: 4,
@@ -41,6 +56,12 @@ const mockFavorites = [
     author: "Vong Ngữ",
     rating: 4.9,
     coverColor: "#96CEB4",
+    coverImage: "https://via.placeholder.com/80x120/96CEB4/FFFFFF?text=🧘",
+    lastRead: "20/4/2025",
+    status: "completed" as const,
+    progress: 100,
+    currentChapter: 1648,
+    totalChapters: 1648,
   },
   {
     id: 5,
@@ -48,6 +69,12 @@ const mockFavorites = [
     author: "Thiên Tàm Thổ Đậu",
     rating: 4.5,
     coverColor: "#FFEAA7",
+    coverImage: "https://via.placeholder.com/80x120/FFEAA7/000000?text=🌸",
+    lastRead: "18/4/2025",
+    status: "reading" as const,
+    progress: 32,
+    currentChapter: 543,
+    totalChapters: 1123,
   },
   {
     id: 6,
@@ -55,32 +82,18 @@ const mockFavorites = [
     author: "Vũ Phong",
     rating: 4.8,
     coverColor: "#DDA0DD",
+    coverImage: "https://via.placeholder.com/80x120/DDA0DD/FFFFFF?text=👑",
+    lastRead: "15/4/2025",
+    status: "reading" as const,
+    progress: 28,
+    currentChapter: 420,
+    totalChapters: 1500,
   },
 ];
 
 const FavoritesScreen = () => {
   const [isGridLayout, setIsGridLayout] = useState(true);
   const [searchText, setSearchText] = useState("");
-
-  const renderFavoriteItem = (item: (typeof mockFavorites)[0]) => (
-    <View key={item.id} style={styles.favoriteItem}>
-      <View style={[styles.coverImage, { backgroundColor: item.coverColor }]}>
-        <TouchableOpacity style={styles.removeButton}>
-          <Text style={styles.removeButtonText}>🗑️</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.itemTitle} numberOfLines={2}>
-        {item.title}
-      </Text>
-      <Text style={styles.itemAuthor} numberOfLines={1}>
-        {item.author}
-      </Text>
-      <View style={styles.ratingContainer}>
-        <Text style={styles.starIcon}>★</Text>
-        <Text style={styles.ratingText}>{item.rating}</Text>
-      </View>
-    </View>
-  );
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
@@ -92,63 +105,41 @@ const FavoritesScreen = () => {
       />
 
       {/* Search and Filter Section */}
+
       <View style={styles.searchSection}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Tìm kiếm trong danh sách yêu thích"
-          placeholderTextColor="#999"
+        <SearchBar
           value={searchText}
           onChangeText={setSearchText}
+          placeholder="Tìm kiếm trong thư viện"
         />
-
-        <View style={styles.filterRow}>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text style={styles.filterButtonText}>🔽 Lọc</Text>
-          </TouchableOpacity>
-
-          <View style={styles.layoutToggle}>
-            <TouchableOpacity
-              style={[
-                styles.layoutButton,
-                isGridLayout && styles.layoutButtonActive,
-              ]}
-              onPress={() => setIsGridLayout(true)}
-            >
-              <Text
-                style={[
-                  styles.layoutButtonText,
-                  isGridLayout && styles.layoutButtonTextActive,
-                ]}
-              >
-                ⬜
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.layoutButton,
-                !isGridLayout && styles.layoutButtonActive,
-              ]}
-              onPress={() => setIsGridLayout(false)}
-            >
-              <Text
-                style={[
-                  styles.layoutButtonText,
-                  !isGridLayout && styles.layoutButtonTextActive,
-                ]}
-              >
-                ☰
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
       </View>
+
+      <FilterAndLayoutToggle
+        isGridLayout={isGridLayout}
+        onLayoutChange={setIsGridLayout}
+        onFilterPress={() => console.log("Filter pressed")}
+      />
 
       {/* Favorites Grid */}
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.favoritesGrid}>
-          {mockFavorites.map(renderFavoriteItem)}
-        </View>
+        {isGridLayout ? (
+          <View style={styles.storiesGrid}>
+            <StoryGridView
+              stories={mockFavorites}
+              type={STORY_LAYOUT_TYPE.FAVORITES}
+            />
+          </View>
+        ) : (
+          <View style={styles.listContainer}>
+            <StoryListView
+              stories={mockFavorites}
+              type={STORY_LAYOUT_TYPE.FAVORITES}
+              onStoryPress={(story) =>
+                console.log("Story pressed:", story.title)
+              }
+            />
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -245,12 +236,19 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 16,
+    padding: 8,
   },
-  favoritesGrid: {
+  contentContainer: {
+    paddingBottom: 80, // Add padding to prevent content from being hidden behind bottom tab bar
+  },
+  storiesGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+  },
+  listContainer: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
   },
   favoriteItem: {
     width: "48%",
