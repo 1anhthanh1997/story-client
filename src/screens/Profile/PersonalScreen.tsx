@@ -199,15 +199,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userName: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 4,
   },
   userUsername: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#666",
-    fontFamily: fonts.styleScriptRegular,
   },
   statsRow: {
     flexDirection: "row",
