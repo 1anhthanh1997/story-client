@@ -1,5 +1,8 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { RootStackParamList } from "../../types/navigation";
 
 interface StoryCardProps {
   item: {
@@ -7,17 +10,34 @@ interface StoryCardProps {
     title: string;
     image: any;
     badge: number;
+    description?: string;
+    author?: string;
+    genre?: string;
+    status?: string;
+    chapters?: number;
   };
 }
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 const StoryCard: React.FC<StoryCardProps> = ({ item }) => {
-  // Don't render if no title (empty item)
-  if (!item.title) {
+  const navigation = useNavigation<NavigationProp>();
+
+  // Don't render if no title (empty item) or if item is not valid
+  if (!item || !item.title || typeof item.title !== "string") {
     return <View style={styles.storyCard} />;
   }
 
+  const handlePress = () => {
+    navigation.navigate("Preview", { id: item.id.toString() });
+  };
+
   return (
-    <View style={styles.storyCard}>
+    <TouchableOpacity
+      style={styles.storyCard}
+      onPress={handlePress}
+      activeOpacity={0.7}
+    >
       <View style={styles.imageContainer}>
         <Image
           source={{
@@ -32,7 +52,7 @@ const StoryCard: React.FC<StoryCardProps> = ({ item }) => {
         )}
       </View>
       <Text style={styles.storyTitle}>{item.title}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

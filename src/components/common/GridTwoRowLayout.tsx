@@ -8,18 +8,36 @@ interface GridTwoRowLayoutProps {
     title: string;
     image: any;
     badge: number;
+    description?: string;
+    author?: string;
+    genre?: string;
+    status?: string;
+    chapters?: number;
   }>;
 }
 
 const GridTwoRowLayout: React.FC<GridTwoRowLayoutProps> = ({ data }) => {
+  // Ensure data is an array and filter out any invalid items
+  const validData = Array.isArray(data)
+    ? data.filter(
+        (item) =>
+          item && typeof item === "object" && typeof item.title === "string"
+      )
+    : [];
+
   // Ensure we have exactly 6 items, pad with empty items if needed
-  const paddedData = [...data];
+  const paddedData = [...validData];
   while (paddedData.length < 6) {
     paddedData.push({
       id: paddedData.length + 1,
       title: "",
       image: null,
       badge: 0,
+      description: "",
+      author: "",
+      genre: "",
+      status: "",
+      chapters: 0,
     });
   }
 

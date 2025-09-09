@@ -3,6 +3,9 @@ import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 
 export type RootStackParamList = {
   MainTabs: undefined;
+  Preview: {
+    id: string;
+  };
 };
 
 export type MainTabParamList = {

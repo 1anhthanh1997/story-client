@@ -24,6 +24,9 @@ import CategoriesSection from "./section/CategoriesSection";
 import { getAllStories } from "api/story";
 import { useEffect, useState } from "react";
 
+// Import default icon
+const defaultIcon = require("../../../assets/icon.png");
+
 const HomePage = () => {
   const [storiesData, setStoriesData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -62,6 +65,23 @@ const HomePage = () => {
     },
   ];
 
+  // Transform API data to match component expected structure
+  const transformStoryData = (apiStories: any[]) => {
+    if (!apiStories || !Array.isArray(apiStories)) return [];
+
+    return apiStories.map((story, index) => ({
+      id: story._id || story.id || index + 1,
+      title: story.name || story.title || `Story ${index + 1}`,
+      image: story.image || defaultIcon,
+      badge: story.badge || story.chapters || 0,
+      description: story.description || "",
+      author: story.author || "",
+      genre: story.genre || "",
+      status: story.status || "",
+      chapters: story.chapters || 0,
+    }));
+  };
+
   const fetchStories = async () => {
     try {
       setLoading(true);
@@ -72,7 +92,8 @@ const HomePage = () => {
         sortBy: "createdAt",
         sortOrder: "desc",
       });
-      setStoriesData(response.data?.stories);
+      const transformedStories = transformStoryData(response.data?.stories);
+      setStoriesData(transformedStories);
     } catch (error) {
       console.error("Error fetching stories:", error);
       setError("Failed to fetch stories");
