@@ -6,6 +6,10 @@ export type RootStackParamList = {
   Preview: {
     id: string;
   };
+  Reading: {
+    chapterId: string;
+    chapterIds: string[];
+  };
 };
 
 export type MainTabParamList = {

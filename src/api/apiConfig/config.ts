@@ -8,7 +8,7 @@ const getBaseUrl = () => {
   // For development, use the computer's IP address instead of localhost
   if (__DEV__) {
     // Use your computer's actual IP address for Expo development
-    return "http://192.168.1.23:3001/api";
+    return "http://192.168.1.78:3001/api";
   }
 
   // For production, use a production URL

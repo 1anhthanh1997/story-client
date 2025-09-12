@@ -15,10 +15,20 @@ import { useNavigation } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../types/navigation";
 import { getStoryById, type Story } from "../../api/story";
-import RenderHtml from "react-native-render-html";
 import Layout from "components/common/Layout";
-// import BottomTabBar from "../../components/common/BottomTabBar";
-import { BackIcon, ShareIcon } from "../../components/icons";
+import {
+  BackIcon,
+  ShareIcon,
+  DownloadIcon,
+  LibraryIcon,
+  HeartIcon,
+  ViewIcon,
+  StarIcon,
+} from "../../components/icons";
+import SummaryContent from "../../components/preview/SummaryContent";
+import ChaptersList from "../../components/preview/ChaptersList";
+import ReviewsList from "../../components/preview/ReviewsList";
+import type { Story as StoryType, Chapter, Review } from "../../types/story";
 
 const { width } = Dimensions.get("window");
 
@@ -28,7 +38,7 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({ route }) => {
   const navigation = useNavigation();
   const { id } = route.params;
 
-  const [story, setStory] = useState<any>(null);
+  const [story, setStory] = useState<StoryType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("summary");
@@ -65,6 +75,118 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({ route }) => {
     progress: 75,
     description:
       "<p><strong>Linh Vũ Thiên Hạ</strong> là câu chuyện về <em>Tần Vũ</em>, một thiếu niên bình thường sống trong làng Thanh Thủy.</p><p>Sau khi phát hiện ra mình có khả năng điều khiển linh khí đặc biệt, anh bắt đầu hành trình tu luyện để trở thành một võ giả mạnh mẽ.</p><p>Trên con đường tìm kiếm sức mạnh, Tần Vũ phải đối mặt với nhiều thế lực hùng mạnh, những âm mưu đen tối và các bí ẩn về nguồn gốc của mình.</p><p><strong>Liệu anh có thể vượt qua mọi thử thách, bảo vệ người thân và đạt đến đỉnh cao của võ đạo?</strong></p>",
+    // Mock chapters data
+    chaptersData: [
+      {
+        _id: "ch1",
+        title: "Chương 1: Khởi đầu",
+        chapterNumber: 1,
+        wordCount: 2500,
+        readingTime: "8 phút",
+        isRead: true,
+        isLocked: false,
+        publishedDate: "2018-05-15",
+      },
+      {
+        _id: "ch2",
+        title: "Chương 2: Gặp gỡ",
+        chapterNumber: 2,
+        wordCount: 2800,
+        readingTime: "9 phút",
+        isRead: true,
+        isLocked: false,
+        publishedDate: "2018-05-16",
+      },
+      {
+        _id: "ch3",
+        title: "Chương 3: Thử thách đầu tiên",
+        chapterNumber: 3,
+        wordCount: 3200,
+        readingTime: "10 phút",
+        isRead: false,
+        isLocked: false,
+        publishedDate: "2018-05-17",
+      },
+      {
+        _id: "ch4",
+        title: "Chương 4: Bí mật",
+        chapterNumber: 4,
+        wordCount: 2900,
+        readingTime: "9 phút",
+        isRead: false,
+        isLocked: false,
+        publishedDate: "2018-05-18",
+      },
+      {
+        _id: "ch5",
+        title: "Chương 5: Quyết định",
+        chapterNumber: 5,
+        wordCount: 3100,
+        readingTime: "10 phút",
+        isRead: false,
+        isLocked: true,
+        publishedDate: "2018-05-19",
+      },
+    ] as Chapter[],
+    // Mock reviews data
+    reviewsData: [
+      {
+        _id: "rev1",
+        user: {
+          name: "Nguyễn Văn A",
+          avatar:
+            "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1697898655.jpg",
+        },
+        rating: 5,
+        comment:
+          "Truyện rất hay! Cốt truyện hấp dẫn, nhân vật được xây dựng tốt. Rất đáng đọc!",
+        date: "2023-12-01",
+        likes: 24,
+        isLiked: false,
+      },
+      {
+        _id: "rev2",
+        user: {
+          name: "Trần Thị B",
+          avatar:
+            "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1697898655.jpg",
+        },
+        rating: 4,
+        comment:
+          "Cốt truyện ổn nhưng đôi khi hơi chậm. Nhân vật chính có tính cách thú vị.",
+        date: "2023-11-28",
+        likes: 12,
+        isLiked: true,
+      },
+      {
+        _id: "rev3",
+        user: {
+          name: "Lê Văn C",
+          avatar:
+            "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1697898655.jpg",
+        },
+        rating: 5,
+        comment:
+          "Một trong những truyện hay nhất tôi từng đọc. Tác giả viết rất chi tiết và logic.",
+        date: "2023-11-25",
+        likes: 36,
+        isLiked: false,
+      },
+      {
+        _id: "rev4",
+        user: {
+          name: "Phạm Thị D",
+          avatar:
+            "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1697898655.jpg",
+        },
+        rating: 3,
+        comment:
+          "Truyện có vẻ ổn nhưng cần cải thiện thêm về phần miêu tả cảnh vật.",
+        date: "2023-11-20",
+        likes: 8,
+        isLiked: false,
+      },
+    ] as Review[],
   };
 
   useEffect(() => {
@@ -78,7 +200,11 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({ route }) => {
           ...mockStory,
           title: response.data.title,
           description: response.data.description,
-          author: { name: response.data.author.name },
+          author: {
+            ...mockStory.author,
+            name: response.data.author.name,
+          },
+          chaptersData: response.data.chapters || mockStory.chaptersData,
         });
       } catch (err) {
         setError("Không thể tải thông tin truyện");
@@ -94,8 +220,11 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({ route }) => {
   }, [id]);
 
   const handleReadStory = () => {
-    if (story) {
-      console.log("Read story:", story.title);
+    if (story && story.chaptersData && story.chaptersData.length > 0) {
+      navigation.navigate("Reading", {
+        chapterId: story.chaptersData[0]._id,
+        chapterIds: story.chaptersData.map((chapter) => chapter._id),
+      });
     }
   };
 
@@ -194,215 +323,141 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({ route }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Story Overview Section */}
-        <View style={styles.storyOverview}>
-          <Image source={{ uri: story.image }} style={styles.storyThumbnail} />
-          <View style={styles.storyInfo}>
-            <Text style={styles.storyTitle}>{story.title}</Text>
-            <Text style={styles.storyAuthor}>
-              {story.author?.name || "Chưa cập nhật"}
-            </Text>
-
-            {/* Ratings and Stats */}
-            <View style={styles.statsRow}>
-              <View style={styles.statItem}>
-                <Text style={styles.starIcon}>★</Text>
-                <Text style={styles.statText}>{story.rating}</Text>
-              </View>
-              <View style={styles.statSeparator} />
-              <View style={styles.statItem}>
-                <Text style={styles.eyeIcon}>👁</Text>
-                <Text style={styles.statText}>{story.views}</Text>
-              </View>
-              <View style={styles.statSeparator} />
-              <View style={styles.statItem}>
-                <Text style={styles.bookIcon}>📖</Text>
-                <Text style={styles.statText}>{story.chapters}</Text>
-              </View>
-            </View>
-
-            {/* Genre Tags */}
-            <View style={styles.genreTags}>
-              {story.genres &&
-                story.genres.map((genre: string, index: number) => (
-                  <View key={index} style={styles.genreTag}>
-                    <Text style={styles.genreTagText}>{genre}</Text>
-                  </View>
-                ))}
-            </View>
-
-            {/* Status and Update Date */}
-            <View style={styles.statusRow}>
-              <Text style={styles.statusText}>{story.status}</Text>
-              <Text style={styles.updateText}>
-                Cập nhật: {story.updatedDate}
-              </Text>
-            </View>
-          </View>
-        </View>
-        {/* Continue Reading Button */}
-        <TouchableOpacity
-          style={styles.continueButton}
-          onPress={handleReadStory}
-        >
-          <Text style={styles.continueButtonText}>Tiếp tục đọc</Text>
-          <Text style={styles.progressText}>
-            Chương {story.currentChapter} ({story.progress}%)
+      {/* Fixed Story Overview Section */}
+      <View style={styles.storyOverview}>
+        <Image source={{ uri: story.image }} style={styles.storyThumbnail} />
+        <View style={styles.storyInfo}>
+          <Text style={styles.storyTitle}>{story.title}</Text>
+          <Text style={styles.storyAuthor}>
+            {story.author?.name || "Chưa cập nhật"}
           </Text>
-        </TouchableOpacity>
-        {/* Action Buttons */}
-        <View style={styles.actionButtons}>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={handleDownload}
-          >
-            <Text style={styles.actionIcon}>⬇</Text>
-            <Text style={styles.actionText}>Tải xuống</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={handleAddToLibrary}
-          >
-            <Text style={styles.actionIcon}>📚</Text>
-            <Text style={styles.actionText}>Thêm vào thư viện</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={handleFavorite}
-          >
-            <Text style={styles.actionIcon}>❤</Text>
-            <Text style={styles.actionText}>Yêu thích</Text>
-          </TouchableOpacity>
-        </View>
-        {/* Tab Navigation */}
-        <View style={styles.tabNavigation}>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "summary" && styles.activeTab]}
-            onPress={() => setActiveTab("summary")}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "summary" && styles.activeTabText,
-              ]}
-            >
-              Tóm tắt
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "chapters" && styles.activeTab]}
-            onPress={() => setActiveTab("chapters")}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "chapters" && styles.activeTabText,
-              ]}
-            >
-              Danh sách chương
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === "reviews" && styles.activeTab]}
-            onPress={() => setActiveTab("reviews")}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "reviews" && styles.activeTabText,
-              ]}
-            >
-              Đánh giá
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {/* Story Introduction */}
-        <View style={styles.introductionSection}>
-          <Text style={styles.sectionTitle}>Giới thiệu</Text>
-          <RenderHtml
-            contentWidth={width - 32}
-            source={{
-              html:
-                story.description ||
-                "Mô tả truyện sẽ được cập nhật sớm. Hãy đọc và khám phá câu chuyện thú vị này!",
-            }}
-            tagsStyles={{
-              p: styles.introductionText,
-              div: styles.introductionText,
-              span: styles.introductionText,
-              br: { marginBottom: 8 },
-            }}
-            baseStyle={styles.introductionText}
-          />
-        </View>
-        {/* Detailed Information */}
-        <View style={styles.detailsSection}>
-          <Text style={styles.sectionTitle}>Thông tin chi tiết</Text>
-          <View style={styles.detailsList}>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Tác giả:</Text>
-              <Text style={styles.detailValue}>
-                {story.author?.name || "Chưa cập nhật"}
-              </Text>
+
+          {/* Ratings and Stats */}
+          <View style={styles.statsRow}>
+            <View style={styles.statItem}>
+              <StarIcon />
+              <Text style={styles.statText}>{story.rating}</Text>
             </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Thể loại:</Text>
-              <Text style={styles.detailValue}>
-                {story.genres && story.genres.slice(0, 2).join(", ")}
-              </Text>
+            <View style={styles.statSeparator} />
+            <View style={styles.statItem}>
+              <ViewIcon />
+              <Text style={styles.statText}>{story.views}</Text>
             </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Trạng thái:</Text>
-              <Text style={styles.detailValue}>{story.status}</Text>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Số chương:</Text>
-              <Text style={styles.detailValue}>{story.chapters}</Text>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Xuất bản:</Text>
-              <Text style={styles.detailValue}>{story.publishedDate}</Text>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Cập nhật:</Text>
-              <Text style={styles.detailValue}>{story.updatedDate}</Text>
+            <View style={styles.statSeparator} />
+            <View style={styles.statItem}>
+              <LibraryIcon />
+              <Text style={styles.statText}>{story.chapters}</Text>
             </View>
           </View>
-        </View>
-        {/* Tags Section */}
-        <View style={styles.tagsSection}>
-          <Text style={styles.sectionTitle}>Thẻ</Text>
-          <View style={styles.tagsContainer}>
-            {story.tags &&
-              story.tags.map((tag: string, index: number) => (
-                <View key={index} style={styles.tag}>
-                  <Text style={styles.tagText}>{tag}</Text>
+
+          {/* Genre Tags */}
+          <View style={styles.genreTags}>
+            {story.genres &&
+              story.genres.map((genre: string, index: number) => (
+                <View key={index} style={styles.genreTag}>
+                  <Text style={styles.genreTagText}>{genre}</Text>
                 </View>
               ))}
           </View>
+
+          {/* Status and Update Date */}
+          {/* <View style={styles.statusRow}>
+            <Text style={styles.statusText}>{story.status}</Text>
+            <Text style={styles.updateText}>Cập nhật: {story.updatedDate}</Text>
+          </View> */}
         </View>
-        {/* About Author Section */}
-        <View style={styles.authorSection}>
-          <Text style={styles.sectionTitle}>Về tác giả</Text>
-          <View style={styles.authorInfo}>
-            <Image
-              source={{
-                uri: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1697898655.jpg",
-              }}
-              style={styles.authorAvatar}
-            />
-            <View style={styles.authorDetails}>
-              <Text style={styles.authorName}>
-                {story.author?.name || "Chưa cập nhật"}
-              </Text>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
+      </View>
+
+      {/* Continue Reading Button */}
+      <TouchableOpacity style={styles.continueButton} onPress={handleReadStory}>
+        <Text style={styles.continueButtonText}>Tiếp tục đọc</Text>
+        <Text style={styles.progressText}>
+          Chương {story.currentChapter} ({story.progress}%)
+        </Text>
+      </TouchableOpacity>
+
+      {/* Action Buttons */}
+      <View style={styles.actionButtons}>
+        {/* <TouchableOpacity
+          style={styles.actionButton}
+          onPress={handleDownload}
+        >
+          <DownloadIcon />
+          <Text style={styles.actionText}>Tải xuống</Text>
+        </TouchableOpacity> */}
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={handleAddToLibrary}
+        >
+          <LibraryIcon />
+          <Text style={styles.actionText}>Thêm vào thư viện</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.actionButton} onPress={handleFavorite}>
+          <HeartIcon />
+          <Text style={styles.actionText}>Yêu thích</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Tab Navigation */}
+      <View style={styles.tabNavigation}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === "summary" && styles.activeTab]}
+          onPress={() => setActiveTab("summary")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "summary" && styles.activeTabText,
+            ]}
+          >
+            Tóm tắt
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === "chapters" && styles.activeTab]}
+          onPress={() => setActiveTab("chapters")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "chapters" && styles.activeTabText,
+            ]}
+          >
+            Danh sách chương
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === "reviews" && styles.activeTab]}
+          onPress={() => setActiveTab("reviews")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "reviews" && styles.activeTabText,
+            ]}
+          >
+            Đánh giá
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Scrollable Tab Content */}
+      <View style={styles.tabContentContainer}>
+        <ScrollView
+          style={styles.tabScrollView}
+          showsVerticalScrollIndicator={false}
+        >
+          {activeTab === "summary" && <SummaryContent story={story} />}
+
+          {activeTab === "chapters" && story.chaptersData && (
+            <ChaptersList chapters={story.chaptersData} storyId={story.id} />
+          )}
+
+          {activeTab === "reviews" && story.reviewsData && (
+            <ReviewsList reviews={story.reviewsData} />
+          )}
+        </ScrollView>
+      </View>
     </Layout>
   );
 };
@@ -449,8 +504,11 @@ const styles = StyleSheet.create({
     color: "#000",
     fontWeight: "600",
   },
-  // Scroll view
-  scrollView: {
+  // Tab content container
+  tabContentContainer: {
+    flex: 1,
+  },
+  tabScrollView: {
     flex: 1,
   },
   // Story overview section
@@ -553,7 +611,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#007AFF",
     marginHorizontal: 16,
     marginVertical: 16,
-    paddingVertical: 16,
+    paddingVertical: 8,
     borderRadius: 8,
     alignItems: "center",
   },
@@ -565,7 +623,7 @@ const styles = StyleSheet.create({
   },
   progressText: {
     color: "#fff",
-    fontSize: 12,
+    fontSize: 14,
     opacity: 0.8,
   },
   // Action buttons
@@ -578,13 +636,14 @@ const styles = StyleSheet.create({
   actionButton: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: 12,
+    paddingVertical: 8,
     backgroundColor: "#f5f5f5",
     borderRadius: 8,
+    gap: 4,
   },
   actionIcon: {
     fontSize: 20,
-    marginBottom: 4,
+    marginBottom: 8,
   },
   actionText: {
     fontSize: 12,

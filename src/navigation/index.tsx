@@ -10,6 +10,7 @@ import SplashScreen from "../screens/Splash/SplashScreen";
 import LibraryScreen from "../screens/Library/LibraryScreen";
 import AllStoryScreen from "../screens/AllStory/AllStoryScreen";
 import PreviewScreen from "../screens/Preview/PreviewScreen";
+import ReadingScreen from "../screens/Reading/ReadingScreen";
 
 // Import custom bottom tab bar
 import BottomTabBar from "../components/common/BottomTabBar";
@@ -68,6 +69,11 @@ export const Navigation = () => {
         <Stack.Screen
           name="Preview"
           component={PreviewScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Reading"
+          component={ReadingScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
